@@ -1,0 +1,28 @@
+# Go binaries and compiled objects
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Fyne packaging & cross-compilation artifacts
+fyne-cross/
+icon.png
+
+# Database & Forensic Files (CRITICAL to ignore)
+*.db
+*.db-shm
+*.db-wal
+*.pst
+*.mbox
+*.msg
+*.eml
+
+# Data files for testing
+_data/
+
+# Environment and IDE
+.env
+vendor/
