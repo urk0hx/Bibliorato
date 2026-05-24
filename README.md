@@ -12,7 +12,7 @@ Bibliorato is an all-in-one, extensible Digital Forensics and Incident Response 
 
 ## Getting Started
 
-You can download the latest release from the [GitHub releases page](https://github.com/yourusername/Bibliorato/releases) or follow the instructions below to compile from source.
+You can download the latest release from the [GitHub releases page](https://github.com/urk0hx/Bibliorato/releases) or follow the instructions below to compile from source.
 
 ### Prerequisites
 - [Go](https://go.dev/doc/install) 1.26.3 or higher.

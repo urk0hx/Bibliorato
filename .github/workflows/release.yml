@@ -1,0 +1,70 @@
+name: Build and Release Fyne App
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5
+        with:
+          go-version: ">=1.20"
+
+      - name: Install Fyne CLI
+        run: go install fyne.io/tools/cmd/fyne@latest
+
+      # --- LINUX SPECIFIC STEPS ---
+      - name: Install Linux Dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y gcc libgl1-mesa-dev xorg-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libxext-dev libxxf86vm-dev
+
+      - name: Package for Linux
+        if: matrix.os == 'ubuntu-latest'
+        # Added the -icon flag here
+        run: fyne package -os linux -icon icon.png
+
+      - name: Upload Linux Asset
+        if: matrix.os == 'ubuntu-latest'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.tar.xz"
+
+      # --- WINDOWS SPECIFIC STEPS ---
+      - name: Package for Windows
+        if: matrix.os == 'windows-latest'
+        # Added the -icon flag here
+        run: fyne package -os windows -icon icon.png
+
+      - name: Upload Windows Asset
+        if: matrix.os == 'windows-latest'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.exe"
+
+      # --- MAC SPECIFIC STEPS ---
+      - name: Package for Mac
+        if: matrix.os == 'macos-latest'
+        # Added the -icon flag here
+        run: |
+          fyne package -os darwin -icon icon.png
+          tar -czf Mac-Release.tar.gz *.app
+
+      - name: Upload Mac Asset
+        if: matrix.os == 'macos-latest'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "Mac-Release.tar.gz"
